@@ -32,3 +32,23 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test   # 👈 solo si TODOS los tests pasan
+
+    # 👇 solo despliega desde master
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build project
+        run: npm run build   # (opcional, depende de tu proyecto)
+
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.SECRET_GITHUB }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: fire-conference-eormeno
