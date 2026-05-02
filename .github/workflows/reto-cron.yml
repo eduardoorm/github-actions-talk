@@ -1,0 +1,20 @@
+name: Reto Cron - Fin de Semana
+
+on:
+  schedule:
+    # 1. Cubre las 6:00 PM de Perú (23:00 UTC) los Sábados y Domingos
+    - cron: '*/20 23 * * 6,0'
+    
+    # 2. Cubre de 7:00 PM a 11:00 PM de Perú (00:00 a 04:00 UTC del día siguiente) 
+    # Para UTC, estas horas caen en Domingo (0) y Lunes (1)
+    - cron: '*/20 0-4 * * 0,1'
+
+  # Añado esto para que puedas probar el botón manual si Eduardo lo pide
+  workflow_dispatch: 
+
+jobs:
+  ejecutar_tarea:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mensaje de éxito
+        run: echo "¡Automatización configurada correctamente para el horario de Lima, Perú!"
