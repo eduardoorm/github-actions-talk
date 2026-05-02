@@ -1,0 +1,17 @@
+name: Saludo en cada push
+
+on:
+  push:
+    branches:
+      - main  # O la rama que estés usando actualmente
+
+jobs:
+  hola:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Saludo personalizado
+        run: echo "👋 ¡Hola desde GitHub Actions, soy Mario!"
