@@ -1,0 +1,24 @@
+name: Demo Needs Always
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Build OK ✅"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Test FALLA ❌"
+      - run: exit 1
+
+  deploy:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - run: echo "Deploy aunque falle 🚀"

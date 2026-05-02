@@ -1,0 +1,31 @@
+name: Setup Outputs Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # 👇 2. Exponer output del job
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+
+    steps:
+      # 👇 1. Crear output
+      - name: Generar versión
+        id: set_version
+        run: |
+          VERSION="1.0.$RANDOM"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Versión generada: $VERSION"
+
+  deploy:
+    # 👇 necesario para acceder al output
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 👇 3. Usar output
+      - name: Usar versión
+        run: echo "Deploying version ${{ needs.build.outputs.version }} "

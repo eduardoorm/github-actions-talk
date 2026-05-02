@@ -1,0 +1,11 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0" # domingo
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Limpiando base de datos..."

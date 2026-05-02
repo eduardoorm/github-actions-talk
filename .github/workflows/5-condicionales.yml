@@ -1,0 +1,19 @@
+name: Conditional Demo
+
+on: workflow_dispatch
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Siempre corre
+        run: echo "Holaa! "
+
+      - name: Solo si es main
+        if: github.ref == 'refs/heads/main'
+        run: echo "Estoy en main"
+
+      - name: Solo si falla algo
+        if: failure()
+        run: echo "Algo salió mal"
