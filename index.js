@@ -1,3 +1,4 @@
+//Comentario de Omar
 function sum(a, b) {
   return a + b;
 }
