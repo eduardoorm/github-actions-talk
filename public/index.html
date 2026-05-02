@@ -1,11 +1,340 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>GDSC UNI - GitHub Actions Workshop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue:   #4285F4;
+      --red:    #EA4335;
+      --yellow: #FBBC05;
+      --green:  #34A853;
+      --dark:   #202124;
+      --gray:   #5F6368;
+      --light:  #F8F9FA;
+      --white:  #FFFFFF;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-blue   { background: var(--blue); }
+    .dot-red    { background: var(--red); }
+    .dot-yellow { background: var(--yellow); }
+    .dot-green  { background: var(--green); }
+
+    nav span {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    nav span b {
+      color: var(--blue);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      background: linear-gradient(160deg, #e8f0fe 0%, #fce8e6 40%, #fef7e0 70%, #e6f4ea 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234285f4' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid #dadce0;
+      border-radius: 24px;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    .badge .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(1.4); }
+    }
+
+    .hero h1 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      max-width: 780px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 .g { color: var(--blue); }
+    .hero h1 .d { color: var(--red); }
+    .hero h1 .s { color: var(--yellow); }
+    .hero h1 .c { color: var(--green); }
+
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--gray);
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 24px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow .2s, transform .15s;
+      border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(66,133,244,.35);
+    }
+
+    .btn-primary:hover { box-shadow: 0 6px 20px rgba(66,133,244,.45); }
+
+    .btn-outline {
+      background: var(--white);
+      color: var(--blue);
+      border: 1.5px solid var(--blue);
+    }
+
+    .btn-outline:hover { box-shadow: 0 4px 12px rgba(66,133,244,.2); }
+
+    /* ── CARDS ── */
+    .cards-section {
+      padding: 64px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 40px;
+      color: var(--dark);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      transition: box-shadow .2s, transform .2s;
+      border-top: 4px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+    }
+
+    .card:nth-child(1) { border-color: var(--blue); }
+    .card:nth-child(2) { border-color: var(--red); }
+    .card:nth-child(3) { border-color: var(--yellow); }
+    .card:nth-child(4) { border-color: var(--green); }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: .9rem;
+      color: var(--gray);
+      line-height: 1.55;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 24px;
+      font-size: .85rem;
+    }
+
+    footer strong { color: var(--white); }
+
+    /* ── DIVIDER STRIP ── */
+    .color-strip {
+      height: 4px;
+      background: linear-gradient(90deg,
+        var(--blue)   0%,   var(--blue)   25%,
+        var(--red)    25%,  var(--red)    50%,
+        var(--yellow) 50%,  var(--yellow) 75%,
+        var(--green)  75%,  var(--green)  100%
+      );
+    }
+  </style>
 </head>
 <body>
-  <h1>HOLA LEAD UTP!! GRACIAS POR SU PARTICIPACION</h1>
+
+  <nav>
+    <div class="logo-dots">
+      <div class="dot dot-blue"></div>
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+    </div>
+    <span><b>GDSC</b> UNI</span>
+  </nav>
+
+  <div class="color-strip"></div>
+
+  <section class="hero">
+    <div class="badge">
+      <span class="pulse"></span>
+      Workshop activo · GitHub Actions
+    </div>
+
+    <h1>
+      Hola <span class="g">G</span><span class="d">D</span><span class="s">S</span><span class="c">C</span> UNI<br>
+      ¡Gracias por su participación!
+    </h1>
+
+    <p>
+      Exploramos GitHub Actions, CI/CD y despliegue continuo con Firebase Hosting.
+      ¡Sigan construyendo cosas increíbles!
+    </p>
+
+    <div class="btn-group">
+      <a class="btn btn-primary" href="https://gdsc.community.dev" target="_blank">
+        🌐 Comunidad GDSC
+      </a>
+      <a class="btn btn-outline" href="https://github.com/features/actions" target="_blank">
+        ⚡ GitHub Actions
+      </a>
+    </div>
+  </section>
+
+  <section class="cards-section">
+    <h2 class="section-title">¿Qué aprendimos hoy?</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>GitHub Actions</h3>
+        <p>Automatización de flujos de trabajo directamente en tu repositorio con YAML.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔁</div>
+        <h3>CI/CD</h3>
+        <p>Integración y despliegue continuo para entregar software de forma confiable y rápida.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔥</div>
+        <h3>Firebase Hosting</h3>
+        <p>Despliegue de aplicaciones web estáticas con CDN global en segundos.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3>Deploy Automático</h3>
+        <p>Cada push a <code>main</code> dispara el pipeline y actualiza el sitio automáticamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Hecho con ❤️ por <strong>GDSC UNI</strong> · Powered by <strong>Firebase Hosting</strong> &amp; <strong>GitHub Actions</strong></p>
+  </footer>
+
 </body>
 </html>
